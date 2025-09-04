@@ -1,7 +1,6 @@
-Networking Basics
+Networking Basics:
 
 A. OSI Model: Layers & Functions
-
 The OSI (Open Systems Interconnection) model is a conceptual framework to understand how network communications takes place. It has total 7 layers:
 
 | Layer | Function | Example/Protocol |
@@ -14,41 +13,25 @@ The OSI (Open Systems Interconnection) model is a conceptual framework to unders
 | 2 - Data Link | Error detection, MAC addressing, frames | Ethernet, ARP |
 | 1 - Physical | Transmission of raw bits over a medium | Cables, Hubs, Switches |
 
----
-
-## 2. TCP/IP Protocol Suite
-
-The **TCP/IP model** is the practical model used in real networks. It has **4 layers**:
+B. TCP/IP Protocol Suite
+The TCP/IP model is the practical model used in real networks. It has total 4 layers:
 
 | Layer | Function | Protocols |
 |-------|---------|-----------|
-| Application | Interfaces for software to use the network | HTTP, HTTPS, FTP, SMTP, DNS |
-| Transport | End-to-end communication & reliability | TCP, UDP |
-| Internet | Logical addressing and routing | IP, ICMP, ARP |
-| Network Access (Link) | Physical network communication | Ethernet, Wi-Fi, ARP |
+|4- Application | Interfaces for software to use the network | HTTP, HTTPS, FTP, SMTP, DNS |
+|3- Transport | End-to-end communication & reliability | TCP, UDP |
+|2- Internet | Logical addressing and routing | IP, ICMP, ARP |
+|1- Network Access (Link) | Physical network communication | Ethernet, Wi-Fi, ARP |
 
-**Key Differences OSI vs TCP/IP:**  
-- OSI has 7 layers; TCP/IP has 4.  
-- TCP/IP is used in practice; OSI is mostly conceptual.  
-
----
-
-## 3. DNS & HTTP/HTTPS Deep Dive
-
-**DNS (Domain Name System)**  
+C. DNS & HTTP/HTTPS Deep Dive
+1. DNS - Domain Name System
 - Translates human-readable domain names into IP addresses.  
-- Example: `www.google.com` → `142.250.190.78`.  
-- Types of records:  
-  - **A** – Address record  
-  - **CNAME** – Canonical name  
-  - **MX** – Mail exchange  
-
-**HTTP (Hypertext Transfer Protocol)**  
+- Example: www.google.com as 142.250.190.78. 
+2. HTTP - Hypertext Transfer Protocol 
 - Protocol for transferring web pages.  
 - Stateless, text-based.  
-
-**HTTPS (HTTP Secure)**  
-- HTTP over **TLS/SSL**, encrypted communication.  
+3. HTTPS - HTTP Secure
+- HTTP over TLS/SSL, encrypted communication.  
 - Ensures confidentiality, integrity, and authentication.
 
 D. IP Addressing, Subnetting, and NAT
@@ -68,7 +51,6 @@ D. IP Addressing, Subnetting, and NAT
   c.PAT (Port Address Translation) – Multiple private IPs share one public IP using ports  
 
 Conclusion:
-OSI & TCP/IP models help understand network communication.  
+- OSI & TCP/IP models help understand network communication.  
 - DNS translates domain names; HTTP/HTTPS transfers web content.  
 - IP addressing, subnetting, and NAT manage and route data efficiently across networks.
-
