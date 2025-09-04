@@ -69,20 +69,23 @@ C. Digital Certificates & SSL/TLS
     
 D. Hands-on: Encrypt & Decrypt Messages Using OpenSSL
  OpenSSL is a powerful toolkit for implementing cryptography in practice. It allows you to encrypt/decrypt messages, generate keys, and create hashes.
- Installing OpenSSL: Linux (Ubuntu/Debian):
+ - Installing OpenSSL: Linux (Ubuntu/Debian):
    Commands: sudo apt update
              sudo apt install openssl
              openssl version
- a)Symmetric Encryption(AES):
+ - a)Symmetric Encryption(AES):
   Step1- Encrypt a file- Command: openssl enc -aes-256-cbc -in message.txt -out message.enc
   Explaination: openssl-Provides cryptographic functions like encryption,decryption,hashing,and key generation.
      enc-Short for symmetric encryption/decryption algorithms.
-     aes-256-cbc-Specifies the algorithm and mode: 1.AES-Advanced Encryption Standard 2.256-Key size is 256           bits (strong security) 3.CBC-Cipher Block Chaining mode (encrypts each block with reference to the             previous block, improving security)          
+     aes-256-cbc-Specifies the algorithm and mode:
+   1.AES-Advanced Encryption Standard
+   2.256-Key size is 256bits (strong security)
+   3.CBC-Cipher Block Chaining mode (encrypts each block with reference to the             previous block, improving security)          
   Step2- Decrypt the file- Command: openssl enc -aes-256-cbc -d -in message.enc -out message_decrypted.txt
   Explaination: d-Stands for decrypt.Without -d, OpenSSL assumes encryption mode by default.
       -in message.enc-Specifies the input file.
       -out message_decrypted.txt-Specifies the output file.
- b)ASymmetric Encryption(RSA):
+ - b)ASymmetric Encryption(RSA):
     Step 1: Generate RSA keys
     openssl genrsa -out private.pem 2048   # Private key
     openssl rsa -in private.pem -pubout -out public.pem  # Public key
@@ -90,6 +93,6 @@ D. Hands-on: Encrypt & Decrypt Messages Using OpenSSL
     openssl rsautl -encrypt -inkey public.pem -pubin -in message.txt -out message.enc
     Step 3: Decrypt message using private key
     openssl rsautl -decrypt -inkey private.pem -in message.enc -out message_decrypted.txt
-  c)Hashing Example:
+  - c)Hashing Example:
      Generate MD5 hash- Command: openssl dgst -md5 message.txt
      Generate SHA-256 hash- Command: openssl dgst -sha256 message.txt
