@@ -1,26 +1,26 @@
 Cryptography Basics:
 
 A. Symmetric vs Asymmetric Encryption
- Encryption:
-  - It is the process to encode data securely such that only the authorized user who knows the key/password is     able to retrieve the original data.
+ - Encryption:
+  - It is the process to encode data securely such that only the authorized user who knows the key/password is able to retrieve the original data.
   - The data encrypted can be easily transformed into original text using encryption key.
   - It is less secure compared to hashing.It is not of fixed length as it grows with increase of data.
  1. Symmetric Encryption
   - Uses same key for encryption and decryption.  
   - Fast and efficient, but key distribution is a challenge.  
   Common Symmetric Algorithms:
-  - |AES| 128/192/256 bits | Most widely used, secure and fast |
-  - |DES| 56 bits | Older, now insecure due to brute-force attacks |
-  - |3DES| 112/168 bits | Encrypts data three times, stronger than DES but slow and also considered outdated.|
-  - |Blowfish| Up to 448 bits | Fast, free, variable key length |
-  - |Twofish| Up to 256 bits | Successor to Blowfish, more secure, flexible |
+  - 1) |AES| 128/192/256 bits | Most widely used, secure and fast |
+  - 2) |DES| 56 bits | Older, now insecure due to brute-force attacks |
+  - 3) |3DES| 112/168 bits | Encrypts data three times, stronger than DES but slow and also considered outdated.|
+  - 4) |Blowfish| Up to 448 bits | Fast, free, variable key length |
+  - 5) |Twofish| Up to 256 bits | Successor to Blowfish, more secure, flexible |
   - Example: -Plaintext: "Hello" -Key: "12345" -Ciphertext (AES): "X1aB2"
  2. Asymmetric Encryption
   - Uses public key for encryption and private key for decryption.  
   - Solves key distribution problem; slower than symmetric.  
   Common Asymmetric Algorithms:
-  - |RSA| Key exchange, digital signatures | Very widely used, security depends on key         size (2048+ bits) |
-  - |ECC| Secure key exchange, digital signatures | Uses smaller keys for same security        as RSA |
+  - 1) |RSA| Key exchange, digital signatures | Very widely used, security depends on key         size (2048+ bits) |
+  - 2) |ECC| Secure key exchange, digital signatures | Uses smaller keys for same security        as RSA |
   - Example: Public Key: user_pub.pem -Private Key: user_priv.pem
            Message encrypted with public key → Decrypted only with private key 
 
@@ -38,7 +38,7 @@ B. Hashing
              - MD5: 8b1a9953c4611296a827abf8c47804d7
              - SHA-256: 185f8db32271fe25f561a6fc938b2e264306ec304eda518007d1764826381969
 C. Digital Certificates & SSL/TLS
- 1. Digital Certificates
+ - 1. Digital Certificates
   - A digital certificate is like a virtual ID card for websites or users.
   - It verifies identity and allows secure communication.
   - Issued by Certificate Authorities (CAs) like DigiCert, Let’s Encrypt, etc.
@@ -53,7 +53,7 @@ C. Digital Certificates & SSL/TLS
     -Domain Validation (DV): Verifies control of domain.
     -Organization Validation (OV): Verifies domain and organization details.
     -Extended Validation (EV): Thorough validation, shows company name in browser bar
- 2. SSL/TLS (Secure Sockets Layer / Transport Layer Security)
+ - 2. SSL/TLS (Secure Sockets Layer / Transport Layer Security)
   - Protocols that encrypt data between client and server.
   - TLS is the modern, more secure version of SSL (SSL 3.0 is outdated).
   - Why SSL/TLS is Important:
@@ -61,15 +61,15 @@ C. Digital Certificates & SSL/TLS
     - Integrity – Data cannot be modified in transit without detection.
     - Authentication – Ensures you are communicating with the intended server.
   - How SSL/TLS Works (Simplified):
-    a) Browser requests secure connection to server (https://).
-    b) Server sends its digital certificate.
-    c) Browser verifies certificate with CA.
-    d) Browser and server agree on a session key (symmetric encryption) using asymmetric encryption (RSA/ECC).
-    e) All further communication is encrypted using the session key.
+    - a) Browser requests secure connection to server (https://).
+    - b) Server sends its digital certificate.
+    - c) Browser verifies certificate with CA.
+    - d) Browser and server agree on a session key (symmetric encryption) using asymmetric encryption (RSA/ECC).
+    - e) All further communication is encrypted using the session key.
   - Example in Real Life: Online banking, e-commerce checkout, Gmail, and any HTTPS website use SSL/TLS to protect sensitive data.
     
 D. Hands-on: Encrypt & Decrypt Messages Using OpenSSL- 
- OpenSSL is a powerful toolkit for implementing cryptography in practice. It allows you to encrypt/decrypt messages, generate keys, and create hashes.
+ - OpenSSL is a powerful toolkit for implementing cryptography in practice. It allows you to encrypt/decrypt messages, generate keys, and create hashes.
  - Installing OpenSSL: Linux (Ubuntu/Debian):
    - Commands: sudo apt update
              sudo apt install openssl
