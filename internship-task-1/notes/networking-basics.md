@@ -24,13 +24,13 @@ The TCP/IP model is the practical model used in real networks. It has total 4 la
 |1- Network Access (Link) | Physical network communication | Ethernet, Wi-Fi, ARP |
 
 C. DNS & HTTP/HTTPS Deep Dive
-1. DNS - Domain Name System
+1. DNS - Domain Name System [Port No.53]
 - Translates human-readable domain names into IP addresses.  
 - Example: www.google.com as 142.250.190.78. 
-2. HTTP - Hypertext Transfer Protocol 
+2. HTTP - Hypertext Transfer Protocol [Port No.80]
 - Protocol for transferring web pages.  
 - Stateless, text-based.  
-3. HTTPS - HTTP Secure
+3. HTTPS - HTTP Secure [Port No.443]
 - HTTP over TLS/SSL, encrypted communication.  
 - Ensures confidentiality, integrity, and authentication.
 
