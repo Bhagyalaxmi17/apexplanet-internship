@@ -9,8 +9,6 @@ A. Symmetric vs Asymmetric Encryption
   - Uses same key for encryption and decryption.  
   - Fast and efficient, but key distribution is a challenge.  
   Common Symmetric Algorithms:
-  | Algorithm | Key Size | Notes |
-  |-----------|---------|-------|
   |AES| 128/192/256 bits | Most widely used, secure and fast |
   |DES| 56 bits | Older, now insecure due to brute-force attacks |
   |3DES| 112/168 bits | Encrypts data three times, stronger than DES but slow and also considered outdated.|
@@ -21,10 +19,8 @@ A. Symmetric vs Asymmetric Encryption
   - Uses public key for encryption and private key for decryption.  
   - Solves key distribution problem; slower than symmetric.  
   Common Asymmetric Algorithms:
-  | Algorithm | Usage | Notes |
-  |-----------|-------|------|
-  |RSA| Key exchange, digital signatures | Very widely used, security depends on key size (2048+ bits) |
-  |ECC| Secure key exchange, digital signatures | Uses smaller keys for same security as RSA |
+  |RSA| Key exchange, digital signatures | Very widely used, security depends on key         size (2048+ bits) |
+  |ECC| Secure key exchange, digital signatures | Uses smaller keys for same security        as RSA |
   Example: Public Key: user_pub.pem -Private Key: user_priv.pem
            Message encrypted with public key → Decrypted only with private key 
 
@@ -69,9 +65,10 @@ C. Digital Certificates & SSL/TLS
     Browser verifies certificate with CA.
     Browser and server agree on a session key (symmetric encryption) using asymmetric encryption (RSA/ECC).
     All further communication is encrypted using the session key.
-  - Example in Real Life: Online banking, e-commerce checkout, Gmail, and any HTTPS website use SSL/TLS to                               protect sensitive data.
+  - Example in Real Life: Online banking, e-commerce checkout, Gmail, and any HTTPS website use SSL/TLS to protect sensitive data.
+    
 D. Hands-on: Encrypt & Decrypt Messages Using OpenSSL
- OpenSSL is a powerful toolkit for implementing cryptography in practice. It allows you to encrypt/decrypt      messages, generate keys, and create hashes.
+ OpenSSL is a powerful toolkit for implementing cryptography in practice. It allows you to encrypt/decrypt messages, generate keys, and create hashes.
  Installing OpenSSL: Linux (Ubuntu/Debian):
    Commands: sudo apt update
              sudo apt install openssl
