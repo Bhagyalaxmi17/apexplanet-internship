@@ -31,28 +31,29 @@ B. Hashing
   - Used for integrity verification and password storage.
   - More secure than encryption.It is generally small & fixed length as it doesn't grow even if data increases.
   - Common Hash Algorithms: 
-  - MD5:128-bit, fast but vulnerable to collisions  
-  - SHA-256:256-bit, more secure, widely used  
+  - 1) MD5:128-bit, fast but vulnerable to collisions  
+  - 2) SHA-256:256-bit, more secure, widely used  
   - Example:
              - Message: "Hello"
              - MD5: 8b1a9953c4611296a827abf8c47804d7
              - SHA-256: 185f8db32271fe25f561a6fc938b2e264306ec304eda518007d1764826381969
+    
 C. Digital Certificates & SSL/TLS
- - 1. Digital Certificates
+- 1. Digital Certificates
   - A digital certificate is like a virtual ID card for websites or users.
   - It verifies identity and allows secure communication.
   - Issued by Certificate Authorities (CAs) like DigiCert, Let’s Encrypt, etc.
-  Contains:
-  - Public Key – Used for encryption by others.
-  - Owner Information – Domain name, organization, location.
-  - Validity Period – Start and expiry dates.
-  - CA Signature – Verifies certificate authenticity.
-  - Example:
+  - Contains:
+   - Public Key – Used for encryption by others.
+   - Owner Information – Domain name, organization, location.
+   - Validity Period – Start and expiry dates.
+   - CA Signature – Verifies certificate authenticity.
+   - Example:
   When you visit https://www.google.com, your browser checks Google’s certificate to confirm it’s authentic      before starting encrypted communication.
   - Types of Certificates:
-    -Domain Validation (DV): Verifies control of domain.
-    -Organization Validation (OV): Verifies domain and organization details.
-    -Extended Validation (EV): Thorough validation, shows company name in browser bar
+    - Domain Validation (DV): Verifies control of domain.
+    - Organization Validation (OV): Verifies domain and organization details.
+    - Extended Validation (EV): Thorough validation, shows company name in browser bar
  - 2. SSL/TLS (Secure Sockets Layer / Transport Layer Security)
   - Protocols that encrypt data between client and server.
   - TLS is the modern, more secure version of SSL (SSL 3.0 is outdated).
@@ -60,7 +61,7 @@ C. Digital Certificates & SSL/TLS
     - Confidentiality – Data is encrypted, so attackers can’t read it.
     - Integrity – Data cannot be modified in transit without detection.
     - Authentication – Ensures you are communicating with the intended server.
-  - How SSL/TLS Works (Simplified):
+  - How SSL/TLS Works:
     - a) Browser requests secure connection to server (https://).
     - b) Server sends its digital certificate.
     - c) Browser verifies certificate with CA.
@@ -71,9 +72,10 @@ C. Digital Certificates & SSL/TLS
 D. Hands-on: Encrypt & Decrypt Messages Using OpenSSL- 
  - OpenSSL is a powerful toolkit for implementing cryptography in practice. It allows you to encrypt/decrypt messages, generate keys, and create hashes.
  - Installing OpenSSL: Linux (Ubuntu/Debian):
-   - Commands: sudo apt update
-             sudo apt install openssl
-             openssl version
+   - Commands:
+             - sudo apt update
+             - sudo apt install openssl
+             - openssl version
  - a)Symmetric Encryption(AES):
   - Step1- Encrypt a file-
    - Command: openssl enc -aes-256-cbc -in message.txt -out message.enc
