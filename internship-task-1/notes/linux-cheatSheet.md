@@ -1,6 +1,7 @@
 Linux Cheat Sheet:
 
 1. File System Navigation
+   
 | Command | Description | Example |
 |---------|------------|---------|
 | pwd | Print current working directory | $ pwd → /home/user |
@@ -12,6 +13,7 @@ Linux Cheat Sheet:
 | cd ~ | Go to home directory | $ cd ~ |
 
 2. File & Directory Permissions
+   
 | Command | Description | Example |
 |---------|------------|---------|
 | chmod | Change file/directory permissions | $ chmod 755 file.txt |
@@ -24,6 +26,7 @@ Permission Notation:
 - Example: 755- wxr-xr-x  
 
 3. Package Management
+   
 | Command | Description | Example |
 |---------|------------|---------|
 | apt update | Update package list | $ sudo apt update |
@@ -34,6 +37,7 @@ Permission Notation:
 | dpkg -l | List installed packages | $ dpkg -l |
 
 4. Networking Commands
+
 | Command | Description | Example |
 |---------|------------|---------|
 | ifconfig | Show network interfaces & IP addresses | $ ifconfig |
@@ -47,6 +51,7 @@ Permission Notation:
 | tcpdump -i <interface> | Capture network packets | $ sudo tcpdump -i eth0 |
 
 Additional: Process & System Management
+
 | Command | Description | Example |
 |---------|------------|---------|
 | ps aux | Show all running processes | $ ps aux |
