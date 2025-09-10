@@ -42,7 +42,17 @@ This folder contains screenshots and notes for my internship tasks demonstrating
 
 9. Netcat (Network Debugging)- (netcat-debugging.png)
 - Desc: Netcat creates TCP/UDP connections to test and debug networks.
-    It allows simple data transfer, port scanning, and checking connectivity between hosts.
+- Command:
+    - nc -lvp 1234 (server terminal)
+    -  nc → Netcat program.
+    - -l → Listen mode (you are waiting for a connection).
+    - -v → Verbose (gives you extra output so you can see what’s happening).
+    - -p 1234 → Port number (here you chose port 1234).
+    - It allows simple data transfer, port scanning, and checking connectivity between hosts.
+    - nc localhost 1234 (client terminal)
+    -  nc → Netcat program again.
+    - localhost → Means 127.0.0.1 (the same machine you are on). Instead of connecting to another computer, you are connecting back to yourself.
+    - 1234 → Port number where the listener is waiting.
 - Screenshot: Server + Client terminals side by side showing live message transfer.
 - Notes: Netcat demo: server listens on port 1234, client connects → messages transferred successfully.
 
