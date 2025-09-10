@@ -1,0 +1,1 @@
+# Nmap 7.95 scan initiated Wed Sep 10 23:56:21 2025 as: /usr/lib/nmap/nmap --privileged -sU -oN udp_scan.txt 192.168.56.101
