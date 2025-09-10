@@ -1,6 +1,7 @@
 Step 2: Port & Service Scanning (NMap Scanning)
 
 When you are testing a network or a system (like Metasploitable2 VM), an attacker usually wants to know what is running on the machine. Each scan in Step 2 helps us get a different piece of that picture.This step is critical because it shows what an attacker could potentially target, and it’s the foundation for vulnerability scanning (Step 3).
+
 1️⃣ TCP SYN Scan (Stealth Scan -sS)
   -  Purpose: Identify which TCP ports are open without fully connecting.
   -  Why: Open ports mean the service is active and can be targeted.
