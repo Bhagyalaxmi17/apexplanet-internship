@@ -38,7 +38,4 @@ Step1- Reconnaissance:
   - Screenshot: Service type and version of FTP server.FTP banner successfully grabbed from Metasploitable2.
 - 8. Banner Grabbing – SSH- (banner_grabbing.png)
   - Command- nc -v 192.168.56.101 22 (SSH service runs on port 22).
-  - Screenshot: Service type and version of SSH server.SSH banner successfully grabbed from Metasploitable2.
-
-Step2-  Port & Service Scanning:
-- 
+  - Screenshot: Service type and version of SSH server.SSH banner successfully grabbed from Metasploitable2. 
