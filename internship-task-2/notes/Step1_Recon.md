@@ -50,10 +50,17 @@ Step 1B: Active Recon
    - 3. Banner Grabbing (SSH) – Check service type and version on SSH port.
  - The tools/methods included in active recon in detail:       
   - 1. Ping Sweep
-     - Purpose: Identify which hosts in a subnet are alive.
+     - Purpose: Identify which hosts in a subnet are alive.Ping command to chcek whether the host is running.
      - Why it’s useful: You don’t waste time scanning dead hosts. Helps you focus on real targets.    
   - 2. Banner Grabbing
-     - Purpose: Check what services and versions are running on open ports.
+     - Purpose:
+      -  Check what services and versions are running on open ports.
+      -  When you connect to a service (like FTP, SSH, HTTP), many servers announce their software name + version in a banner.
+      -  Attackers (or penetration testers) can use that banner info to:
+      -  Identify the exact software running.
+      -  Look up known vulnerabilities for that version.
+      -  Plan targeted attacks or exploits.
+      -   Example: vsFTPd 2.3.4 has a backdoor vulnerability (CVE-2011-2523). Just from this banner, we know the system is vulnerable to a specific exploit.
      - Why it’s useful: Knowing service versions helps identify known vulnerabilities.
      - Examples:
        - FTP banner grab → shows version (e.g., 2.3.4)
