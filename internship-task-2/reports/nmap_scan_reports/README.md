@@ -11,6 +11,20 @@ When you are testing a network or a system (like Metasploitable2 VM), an attacke
   -  - -sS → SYN scan (stealth).
      - 192.168.56.101 → Target VM IP.
      - -oN tcp_scan.txt → Output saved in normal text format
+  - Why -sS instead of -sT here?
+    -  Stealth
+     -  -sS doesn’t complete the TCP handshake → harder for the victim (Metasploitable2 in your case) to log the scan.
+     - If you used -sT, it would fully connect to each port → the victim would log “connection attempt” for every port (1000 times).
+    -  Speed
+     - -sS is faster since it only sends SYN → gets SYN-ACK or RST → done.
+     - -sT wastes time doing full connections and then closing them.
+    -  Privilege level
+     - In Kali, you usually run Nmap as root (or with sudo), so you can use -sS.
+     - If you were a normal user without root, you’d be forced to use -sT.
+     - So why are you using -sS in reports?
+     - Because this is industry standard. Almost every pentest report shows SYN scans for TCP ports.
+     - If you want to be sneaky and efficient (like a hacker) → use -sS.
+     - If you’re just testing openly without worrying about being noticed → -sT works.
 
 2️⃣ UDP Scan (-sU)
   -  Purpose: Find services running over UDP (like DNS or SNMP).TCP only covers one protocol; UDP is another protocol used by services like DNS, SNMP.
