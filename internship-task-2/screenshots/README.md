@@ -1,1 +1,21 @@
-
+Step1- Reconnaissance
+- 1. Whois:
+  - Command: whois example.com
+  - Example: whois 8.8.8.8
+  - Output: Owner of the IP (Google), Netblock information, Organization, registration dates.
+  - Result: Skipped in lab due Host-Only Network Enabled. Normally, this would show registrar, IP, and domain info.
+- 2. Nslookup
+  -
+- 3. Dig (optional)
+  -
+- 4. Google Dorking
+  - Example: site:google.com filetype:pdf   AND    site:google.com intitle:"index of"
+  - Output: - https://www.google.com/intl/en/about/pdf/Google_Annual_Report_2022.pdf
+            - https://www.google.com/intl/en/privacy/pdf/Privacy_Policy.pdf
+            - AND Index of /files , Index of /documents , Index of /reports
+  - Result: This would show publicly exposed PDF files on the target domain AND this would reveal                        directories and files exposed publicly on the target website.
+- 5. Shodan
+  - Command: Go to https://www.shodan.io In Search bar Search the domain you want information of.
+  - Example: Search 8.8.8.8 on https://www.shodan.io
+  - Output: IP: 8.8.8.8, Organization: Google LLC, ISP: Google, Open Ports: 53 (DNS), Services: DNS, Location: United States
+  - Result: This shows open ports, services, organization, ISP, and location of the target IP or domain.
