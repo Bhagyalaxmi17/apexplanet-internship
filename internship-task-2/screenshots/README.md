@@ -28,9 +28,16 @@ Step1- Reconnaissance:
   - Result: This shows open ports, services, organization, ISP, and location of the target IP or domain.Skipped.
 - 6. Ping Sweep- (kali-ping-metasploitable.png)
   - Screenshot: Shows whether target host(Metasploitable2 VM) is alive and responding. 0% packet loss.
-- 7. Banner Grabbing – FTP- (bftp.png)
+- 7. Banner Grabbing – FTP- (banner_grabbing.png)
+  - Command-
+     - nc -v 192.168.56.101 21
+     - nc → Netcat (network utility for reading/writing to network connections).
+     - -v → Verbose mode (gives detailed output).
+     - 192.168.56.101 → Target IP (Metasploitable2 VM).
+     - 21 → Port number (FTP service runs on port 21).
   - Screenshot: Service type and version of FTP server.FTP banner successfully grabbed from Metasploitable2.
-- 8. Banner Grabbing – SSH- (bssh.png)
+- 8. Banner Grabbing – SSH- (banner_grabbing.png)
+  - Command- nc -v 192.168.56.101 22 (SSH service runs on port 22).
   - Screenshot: Service type and version of SSH server.SSH banner successfully grabbed from Metasploitable2.
 
 Step2-  Port & Service Scanning:
