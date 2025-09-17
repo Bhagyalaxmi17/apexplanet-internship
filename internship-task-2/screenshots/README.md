@@ -42,7 +42,10 @@ STEP 1- Reconnaissance:
 
 STEP 4- Packet Analysis with Wireshark
  - 1.Capture HTTP, FTP, DNS traffic.
-
+   - IN Command Prompt: cd C:\Users......\testfile
+   - py -3 -m http.server 8000 --bind 0.0.0.0
+   - O/P Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...192.168.56.102 - -
+   - ScreenShot:  
  - 2.Filter credentials from unencrypted FTP traffic.
    
  - 3.Analyze SYN flood attack (simulate with hping3).
