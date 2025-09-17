@@ -1,4 +1,4 @@
-Step1- Reconnaissance:
+STEP 1- Reconnaissance:
 - 1. Whois
   - Command: whois example.com
   - Example: whois 8.8.8.8
@@ -39,3 +39,10 @@ Step1- Reconnaissance:
 - 8. Banner Grabbing – SSH- (banner_grabbing.png)
   - Command- nc -v 192.168.56.101 22 (SSH service runs on port 22).
   - Screenshot: Service type and version of SSH server.SSH banner successfully grabbed from Metasploitable2. 
+
+STEP 4- Packet Analysis with Wireshark
+ - 1.Capture HTTP, FTP, DNS traffic.
+
+ - 2.Filter credentials from unencrypted FTP traffic.
+   
+ - 3.Analyze SYN flood attack (simulate with hping3).
