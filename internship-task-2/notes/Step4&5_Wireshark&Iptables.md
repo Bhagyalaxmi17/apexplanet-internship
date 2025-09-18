@@ -8,7 +8,7 @@ STEP4-  Packet Analysis with Wireshark
  - A. HTTP Traffic: Shows web requests/responses between client and server. Unencrypted HTTP traffic can reveal URLs, headers, and even form data.
     - Commands:
         - curl -I http://192.168.56.102
-         - -I asks for the HTTP headers only (sends a HEAD request). You’ll see response headers like HTTP/1.1 200 OK, Content-Type, Server, Date, etc.
+           - -I asks for the HTTP headers only (sends a HEAD request). You’ll see response headers like HTTP/1.1 200 OK, Content-Type, Server, Date, etc.
         - curl http://192.168.56.101/   # You’ll see the HTML source(Ip of the victime's machine will be used)
         - curl -X POST -d "username=testuser&password=MyP@ss123" http://192.168.56.102/
            - -X POST forces an HTTP POST request.-d "..." sets the POST body — here it simulates a form submission with two fields: username and password.
@@ -20,10 +20,10 @@ STEP4-  Packet Analysis with Wireshark
  - B. FTP Traffic: File Transfer Protocol sends files over the network. Classic FTP sends credentials (username/password) in plaintext, making it vulnerable to sniffing.
     - Commands:
        - ftp 192.168.56.101
-         - # Name: msfadmin
-         - # Password: msfadmin
+         - Name: msfadmin
+         - Password: msfadmin
  - C. DNS Traffic: Domain Name System translates domain names to IP addresses. Capturing DNS traffic lets you see which websites a host is querying. In Wireshark- dns
-    - Command:dig @192.168.56.101 example.test A OR 
+    - Command: dig @192.168.56.101 example.test A OR 
  - Capturing these allows you to understand what data flows on a network, which is fundamental in cybersecurity monitoring and analysis.
 
 2- Filter Credentials from FTP-
