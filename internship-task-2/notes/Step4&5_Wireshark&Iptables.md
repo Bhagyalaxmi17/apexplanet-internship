@@ -5,36 +5,36 @@ STEP4-  Packet Analysis with Wireshark
 
  - Wireshark is a network protocol analyzer that captures and inspects network packets.
   
- -A. HTTP Traffic: Shows web requests/responses between client and server. Unencrypted HTTP traffic can reveal URLs, headers, and even form data.
+ - A. HTTP Traffic: Shows web requests/responses between client and server. Unencrypted HTTP traffic can reveal URLs, headers, and even form data.
     - Commands:
         - curl -I http://192.168.56.102
-          - # -I asks for the HTTP headers only (sends a HEAD request). You’ll see response headers like HTTP/1.1 200 OK, Content-Type, Server, Date, etc.
+           - # -I asks for the HTTP headers only (sends a HEAD request). You’ll see response headers like HTTP/1.1 200 OK, Content-Type, Server, Date, etc.
         - curl http://192.168.56.101/   # You’ll see the HTML source(Ip of the victime's machine will be used)
         - curl -X POST -d "username=testuser&password=MyP@ss123" http://192.168.56.102/
            - # -X POST forces an HTTP POST request.-d "..." sets the POST body — here it simulates a form submission with two fields: username and password.
-   - Wireshark Filters:
+    - Wireshark Filters:
      - HTTP (all) : http
      - HTTP POST : http.request.method == "POST"
      - HTTP GET : http.request.method == "GET"    
 
- -B. FTP Traffic: File Transfer Protocol sends files over the network. Classic FTP sends credentials (username/password) in plaintext, making it vulnerable to sniffing.
+ - B. FTP Traffic: File Transfer Protocol sends files over the network. Classic FTP sends credentials (username/password) in plaintext, making it vulnerable to sniffing.
     - Commands:
        - ftp 192.168.56.101
          - # Name: msfadmin
          - # Password: msfadmin
- -C. DNS Traffic: Domain Name System translates domain names to IP addresses. Capturing DNS traffic lets you see which websites a host is querying. In Wireshark- dns
+ - C. DNS Traffic: Domain Name System translates domain names to IP addresses. Capturing DNS traffic lets you see which websites a host is querying. In Wireshark- dns
     - Command:dig @192.168.56.101 example.test A OR 
  - Capturing these allows you to understand what data flows on a network, which is fundamental in cybersecurity monitoring and analysis.
 
 2- Filter Credentials from FTP-
 
  - FTP sends authentication details in clear text:
- - Username: USER command
- - Password: PASS command
+   - Username: USER command
+   - Password: PASS command
  - By filtering in Wireshark (ftp.request.command == "USER" or "PASS") OR ftp.request.command == "USER" || ftp.request.command == "PASS", you can observe credentials in plaintext.
  - Purpose:
- - Demonstrates why unencrypted protocols are insecure.
- - Highlights importance of using secure alternatives like SFTP or FTPS.
+   - Demonstrates why unencrypted protocols are insecure.
+   - Highlights importance of using secure alternatives like SFTP or FTPS.
 
 3- Analyze SYN Flood Attack-
 
@@ -44,16 +44,16 @@ STEP4-  Packet Analysis with Wireshark
  - Attacker never sends final ACK, leaving half-open connections.
  - Server resources get exhausted, denying service to legitimate users.
  - Using hping3:
- - Command: sudo hping3 -S --flood -V -p 80 192.168.56.101 (Ip address of victim's system)
- - -S → sets the SYN flag
- - -p 80 → targets port 80 (HTTP)
- - --flood → sends packets as fast as possible
+    - Command: sudo hping3 -S --flood -V -p 80 192.168.56.101 (Ip address of victim's system)
+    - -S → sets the SYN flag
+    - -p 80 → targets port 80 (HTTP)
+    - --flood → sends packets as fast as possible
  - Wireshark Filter: tcp.flags.syn==1 && tcp.flags.ack==0
  - Captures incoming SYN packets without corresponding ACKs.
  - Shows the high volume of SYN packets during the attack.
 - Purpose:
- - Demonstrates network attacks in a controlled lab.
- - Helps understand how DoS attacks work and the importance of firewall/IDS protections.
+  - Demonstrates network attacks in a controlled lab.
+  - Helps understand how DoS attacks work and the importance of firewall/IDS protections.
 
 STEP 5-   Firewall Basics
 
