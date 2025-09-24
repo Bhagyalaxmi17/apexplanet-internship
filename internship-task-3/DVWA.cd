@@ -1,1 +1,193 @@
+DVWA (Damn Vulnerable Web Application)
 
+1. What is DVWA?
+
+    DVWA is an intentionally vulnerable web application designed for learning web security.
+    - Key points:
+      - Written in PHP and uses MySQL / MariaDB for data storage.
+      - Allows users to practice common web vulnerabilities safely.
+      - Great for beginners/intermediate students to understand attacks without harming real systems.
+      - Supports various security levels: low, medium, high, impossible.
+
+2. Purpose of DVWA
+
+    DVWA exists for educational and training purposes:
+    - Learning by doing: Instead of just reading about vulnerabilities, you actually exploit them.
+    - Safe environment: You won’t damage live systems or databases.
+    - Understanding OWASP Top 10: DVWA has examples of multiple vulnerabilities like:
+      - SQL Injection (SQLi) ✅
+      - Cross-Site Scripting (XSS) ✅
+      - CSRF (Cross-Site Request Forgery) ✅
+      - File Inclusion
+      - Command Execution
+      - Weak passwords / authentication flaws
+    - Mitigation testing: You can see how security mechanisms (like prepared statements, input validation, and headers) stop attacks.
+
+3. DVWA Structure
+
+DVWA’s file structure is very organized. Here’s a simplified overview:
+
+/var/www/html/DVWA/
+│
+├── config/                 # Configuration files (DB credentials, etc.)
+│   ├── config.inc.php      # Active configuration
+│   └── config.inc.php.dist # Template file
+│
+├── hackable/               # Pages containing vulnerabilities
+│   ├── sqli/               # SQL Injection examples
+│   ├── xss/                # Cross-site scripting
+│   ├── csrf/               # CSRF examples
+│   └── file_inclusion/     # LFI / RFI examples
+│
+├── setup.php               # Database setup / initialization script
+├── index.php               # DVWA homepage
+├── login.php               # Login page
+└── README.md               # Instructions
+
+Why important:
+    - Each vulnerability is isolated in a separate folder → safe and focused learning.
+    - config/ connects DVWA to MariaDB. Without this, DVWA cannot run.      
+    - setup.php ensures the database tables are created properly.
+
+4. Security Levels in DVWA
+
+DVWA allows you to change security settings:
+
+Level	Behavior
+    - Low	No input filtering → attacks work easily (good for learning)
+    - Medium	Some input validation & escaping → attacks need tweaking
+    - High Proper security → attacks harder or blocked
+    - Impossible Security cannot be bypassed → shows how a fully secure system behaves
+
+5. Example Vulnerabilities in DVWA
+
+    - SQL Injection (SQLi)
+       - User input is directly added into SQL queries.
+       - Example: SELECT * FROM users WHERE id='$id';
+       - Vulnerable if $id comes from GET/POST without validation.
+       - Attackers can retrieve usernames/passwords.
+    - Cross-Site Scripting (XSS)
+       - Injecting malicious scripts in forms/comments.
+       - Can steal cookies or redirect users.
+    - CSRF (Cross-Site Request Forgery)
+       - Tricks logged-in users into performing actions without consent.
+       - DVWA demonstrates this by changing passwords via hidden forms.
+    - File Inclusion
+       - LFI/RFI allows reading or executing server files.
+       - Commonly used to steal configs or run malicious code.
+
+6. How DVWA Works
+      
+    - User accesses a page (e.g., SQLi page).
+    - The page takes user input (like id) and builds an SQL query.
+    - If the input isn’t sanitized:
+      - SQLi can extract data from the DB.
+      - XSS can inject scripts.
+    - By switching security levels:
+      - Low → vulnerable
+      - High → input is filtered / prepared statements are used
+    - You can test attacks, then implement fixes → demonstrates vulnerability → mitigation.
+
+Step 1: SQL Injection in DVWA  
+
+1) What is SQL Injection (SQLi)?
+
+- Definition:
+  - SQL Injection is a vulnerability where an attacker can manipulate a web application’s SQL queries by injecting malicious input.
+- Why it happens:
+  - When user input is directly inserted into SQL queries without validation or escaping.
+  - The database executes whatever the input modifies the query to do.
+- Real-world example (without DVWA):
+  - $id = $_GET['id'];
+  - $query = "SELECT * FROM users WHERE user_id = '$id'";
+  - If a user enters 1 → query works normally.
+  - If a user enters 1 OR 1=1 → query becomes:
+  - SELECT * FROM users WHERE user_id = '1' OR 1=1;
+  - 1=1 is always true → returns all rows in the database.
+- Danger:
+  - Attackers can read sensitive data, modify/delete records, or even compromise the system.
+
+2) Why DVWA is Safe for SQLi
+
+- Localhost Only:
+  - DVWA runs on 127.0.0.1 (your own machine).
+  - No internet exposure → only you can access it.
+- Dedicated Database User:
+  - CREATE USER 'dvwa'@'localhost' IDENTIFIED BY 'dvwa_pass';
+  - GRANT ALL PRIVILEGES ON dvwa.* TO 'dvwa'@'localhost';
+
+
+SQLi can only affect the dvwa database.
+
+Root DB and OS files are safe.
+
+Resettable Environment:
+
+setup.php → Create / Reset Database resets the database anytime.
+
+3) DVWA Security Levels
+
+Low: No filtering → SQLi works easily.
+
+Medium/High/Impossible:
+
+Adds input validation, escaping, or prepared statements.
+
+Helps demonstrate how proper coding prevents attacks.
+
+Why Low:
+
+It allows you to see the vulnerability in action.
+
+Learning first in low helps understand the mechanics of SQLi.
+
+4) Performing SQLi in DVWA
+
+Steps:
+
+Go to the SQL Injection page:
+
+http://127.0.0.1/DVWA/vulnerabilities/sqli/
+
+
+Input box ID takes user input. Example: 1 OR 1=1
+
+The PHP page executes the query:
+
+$query = "SELECT first_name, last_name, user_id FROM users WHERE user_id = '$id'";
+
+
+Our input manipulates the query to:
+
+SELECT first_name, last_name, user_id FROM users WHERE user_id = '1' OR 1=1;
+
+
+OR 1=1 always evaluates to true → all users are returned.
+
+Output: You see multiple usernames and passwords on the page.
+
+5) Why This Works
+
+DVWA Low level does not sanitize input.
+
+No prepared statements → the database executes exactly what the attacker typed.
+
+This is exactly how real-world SQLi happens in unsafe applications.
+
+Key Concept:
+The vulnerability exists because developers trusted user input. Always validating input or using prepared statements fixes this.
+
+6) Demonstrating the Fix (Prepared Statements)
+
+Prepared statements separate query structure from user input:
+
+$stmt = $db->prepare("SELECT * FROM users WHERE user_id = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+
+
+? is a placeholder; $id is bound safely.
+
+Even if the user enters '1 OR 1=1', the database treats it as a literal value, not part of SQL.
+
+Result: Injection fails → only correct user_id rows are returned.
