@@ -1,3 +1,8 @@
+OWASP stands for Open Web Application Security Project.
+**“OWASP is a global nonprofit organization focused on improving the security of software. It provides free resources, tools, and best practices for developers and security professionals to identify, prevent, and fix vulnerabilities in web applications.
+
+One of its most well-known contributions is the ‘OWASP Top 10,’ which is a list of the 10 most critical web application security risks, like SQL Injection, Cross-Site Scripting (XSS), and Broken Authentication. It serves as a guideline to help developers and security teams secure applications against common threats.”**
+
 DVWA (Damn Vulnerable Web Application)
 
 1. What is DVWA?
