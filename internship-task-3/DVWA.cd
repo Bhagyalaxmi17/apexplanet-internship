@@ -88,7 +88,7 @@ Level	Behavior
       - High → input is filtered / prepared statements are used
     - You can test attacks, then implement fixes → demonstrates vulnerability → mitigation.
 
-Step 1: SQL Injection in DVWA  
+STEP 1: SQL Injection  
 
 1) What is SQL Injection (SQLi)?
 
@@ -115,79 +115,44 @@ Step 1: SQL Injection in DVWA
 - Dedicated Database User:
   - CREATE USER 'dvwa'@'localhost' IDENTIFIED BY 'dvwa_pass';
   - GRANT ALL PRIVILEGES ON dvwa.* TO 'dvwa'@'localhost';
-
-
-SQLi can only affect the dvwa database.
-
-Root DB and OS files are safe.
-
-Resettable Environment:
-
-setup.php → Create / Reset Database resets the database anytime.
+  - SQLi can only affect the dvwa database.
+  - Root DB and OS files are safe. 
+  - Resettable Environment:    
+  - setup.php → Create / Reset Database resets the database anytime.
 
 3) DVWA Security Levels
 
-Low: No filtering → SQLi works easily.
-
-Medium/High/Impossible:
-
-Adds input validation, escaping, or prepared statements.
-
-Helps demonstrate how proper coding prevents attacks.
-
-Why Low:
-
-It allows you to see the vulnerability in action.
-
-Learning first in low helps understand the mechanics of SQLi.
+    - Low: No filtering → SQLi works easily.
+    - Medium/High/Impossible:
+    - Adds input validation, escaping, or prepared statements.
+    - Helps demonstrate how proper coding prevents attacks.
+    - Why Low:
+    - It allows you to see the vulnerability in action.
+    - Learning first in low helps understand the mechanics of SQLi.
 
 4) Performing SQLi in DVWA
 
-Steps:
+    - Steps:
+    - Go to the SQL Injection page:
+    - http://127.0.0.1/DVWA/vulnerabilities/sqli/
+    - Input box ID takes user input. Example: 1 OR 1=1
+    - The PHP page executes the query:
+    - $query = "SELECT first_name, last_name, user_id FROM users WHERE user_id = '$id'";
+    - Our input manipulates the query to:
+    - SELECT first_name, last_name, user_id FROM users WHERE user_id = '1' OR 1=1;
+    - OR 1=1 always evaluates to true → all users are returned.
+    - Output: You see multiple usernames and passwords on the page.
+    
+5) Demonstrating the Fix (Prepared Statements)
 
-Go to the SQL Injection page:
+    - Prepared statements separate query structure from user input:
+    - $stmt = $db->prepare("SELECT * FROM users WHERE user_id = ?");
+    - $stmt->bind_param("i", $id);
+    - $stmt->execute();
+    - ? is a placeholder; $id is bound safely.
+    - Even if the user enters '1 OR 1=1', the database treats it as a literal value, not part of SQL.
+    - It only provides the first id as output.
+    - Result: Injection fails → only correct user_id rows are returned.
 
-http://127.0.0.1/DVWA/vulnerabilities/sqli/
+STEP 2- Cross-Site Scripting (XSS)
 
-
-Input box ID takes user input. Example: 1 OR 1=1
-
-The PHP page executes the query:
-
-$query = "SELECT first_name, last_name, user_id FROM users WHERE user_id = '$id'";
-
-
-Our input manipulates the query to:
-
-SELECT first_name, last_name, user_id FROM users WHERE user_id = '1' OR 1=1;
-
-
-OR 1=1 always evaluates to true → all users are returned.
-
-Output: You see multiple usernames and passwords on the page.
-
-5) Why This Works
-
-DVWA Low level does not sanitize input.
-
-No prepared statements → the database executes exactly what the attacker typed.
-
-This is exactly how real-world SQLi happens in unsafe applications.
-
-Key Concept:
-The vulnerability exists because developers trusted user input. Always validating input or using prepared statements fixes this.
-
-6) Demonstrating the Fix (Prepared Statements)
-
-Prepared statements separate query structure from user input:
-
-$stmt = $db->prepare("SELECT * FROM users WHERE user_id = ?");
-$stmt->bind_param("i", $id);
-$stmt->execute();
-
-
-? is a placeholder; $id is bound safely.
-
-Even if the user enters '1 OR 1=1', the database treats it as a literal value, not part of SQL.
-
-Result: Injection fails → only correct user_id rows are returned.
