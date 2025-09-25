@@ -15,9 +15,9 @@ DVWA (Damn Vulnerable Web Application)
     - Learning by doing: Instead of just reading about vulnerabilities, you actually exploit them.
     - Safe environment: You won’t damage live systems or databases.
     - Understanding OWASP Top 10: DVWA has examples of multiple vulnerabilities like:
-      - SQL Injection (SQLi) ✅
-      - Cross-Site Scripting (XSS) ✅
-      - CSRF (Cross-Site Request Forgery) ✅
+      - SQL Injection (SQLi) 
+      - Cross-Site Scripting (XSS) 
+      - CSRF (Cross-Site Request Forgery) 
       - File Inclusion
       - Command Execution
       - Weak passwords / authentication flaws
@@ -156,4 +156,54 @@ STEP 1: SQL Injection
 
 STEP 2- Cross-Site Scripting (XSS)
 
+What is XSS?
+- Cross-Site Scripting (XSS) is a class of web vulnerability where an attacker is able to inject client-side scripts (usually JavaScript) into pages viewed by other users. When the victim’s browser executes the injected script, the attacker can do things like steal session cookies, manipulate the DOM, perform actions as the user, show fake UI, etc.
+- Two common types you’ll test
+  - Stored (Persistent) XSS
+    - How it works: Attacker submits malicious script into a site input (comment, profile, message) that the server stores in the database. When any user later views that stored data, the script runs in their browser.
+    - Impact: Broad — any user who views the page can be affected; can be used to steal cookies, perform actions, pivot.
+    - Consequences of Stored XSS include:
+        - Redirecting users to malicious sites
+        - Stealing cookies or session tokens
+        - Defacing the website
+        - Performing actions on behalf of other users
+    - Commands
+       - Open DVWA and navigate to Stored XSS page:
+       - Enter malicious payload in the Guestbook form:
+         - Name: Bhagyalaxmi
+         - Message: <img src=x onerror=alert(2)>
+         - Click Sign Guestbook
+    - Output
+      - The page reloads and shows the guestbook entries.
+      - A popup with 2 appears — this confirms that the browser executed the injected script.
+      - When any user loads that page, the malicious code executes in their browser.
+      - In our lab, the popup 2 is just a safe demonstration — it proves that the input was executed as code instead of being treated as plain text.
+      - In real life, a hacker could replace alert(2) with something harmful: stealing cookies, logging keystrokes, redirecting the user, etc.
+        
+  - Reflected (Non-persistent) XSS
+    - How it works: The server reflects attacker-controlled input immediately in a response (e.g., search term shown in results or a name parameter echoed back), without storing it. The attacker crafts a URL containing the payload and convinces a victim to click it. 
+    - Impact: Targeted — requires tricking a victim (phishing link), but still very dangerous.
+    - Consequences include:
+      - Stealing cookies/session tokens
+      - Phishing attacks
+      - Redirection to malicious websites
+    - Commands:
+      - Open DVWA and navigate to Reflected XSS page
+      - Your name: <script>alert('Reflected XSS Mallicious Content')</script>
+    - Output:
+      - The input was reflected directly in the page response.
+      - The browser executed it as JavaScript, producing the alert popup.
+      - This demonstrates a Reflected XSS vulnerability, showing that any user who clicks the link could trigger the script.
+      - Attackers exploit it via malicious links in emails, social media, or phishing pages.
+        
+- Why it happens
+  - The app outputs user data (from query string, form fields, DB) into HTML without escaping/encoding it.
+  - Browsers parse the HTML and run any script tags, event handlers, onerror, etc.
+
+- How to prevent XSS (two main techniques we’ll demonstrate)
+  - Output escaping / input validation (server-side):
+    - Restrict what users can input. Example: allow only letters/numbers for a name field. Remove or encode HTML special characters (<, >, &, ", '). This ensures scripts are displayed as text, not executed.
+    - use htmlspecialchars (PHP) or template auto-escaping to render user data as text, not as HTML. Prefer the output encoding model (escape on output). Encode user data before rendering it on a page.
+    
+  - Content Security Policy (CSP): browser policy delivered via headers that restrict which scripts can execute (e.g., only scripts from the same origin, disallow inline scripts). CSP is defense-in-depth — it mitigates impact even if something slips through.
 
