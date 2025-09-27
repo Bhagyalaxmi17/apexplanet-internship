@@ -206,7 +206,7 @@ What is XSS?
   - Browsers parse the HTML and run any script tags, event handlers, onerror, etc.
 
 - How to prevent XSS (two main techniques we’ll demonstrate)
-  - Input Sanitization / input validation (server-side):
+  - Input Sanitization / input validation (server-side)/ WhiteListing:
     - Checking and restricting what users can input before it goes to the database or page.Restrict what users can input. Example: allow only letters/numbers for a name field. Remove or encode HTML special characters (<, >, &, ", '). This ensures scripts are displayed as text, not executed.Malicious users often inject scripts via form fields. If we restrict inputs to safe characters, scripts cannot execute.Displayed as text, not executed.
   - Output Encoding / Escaping  
     -  Even if user input contains HTML or scripts, encode it before rendering on the page. Prevents browser from interpreting input as executable code. Use htmlspecialchars (PHP) , HTMLEncode() (other languages),or template auto-escaping to render user data as text, not as HTML. Prefer the output encoding model (escape on output). Encode user data before rendering it on a page.Any injected script is shown as text, popup doesn’t appear.
