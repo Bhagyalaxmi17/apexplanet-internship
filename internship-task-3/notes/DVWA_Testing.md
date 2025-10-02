@@ -263,6 +263,7 @@ STEP 4- File Inclusion Attacks
   - attacker causes the server to include a file from the local filesystem (e.g., /etc/passwd, application config, logs).
 - Remote File Inclusion RFI (execute malicious code).
   - attacker causes the server to include and execute a remote resource (e.g., http://attacker/shell.php). RFI requires server-side support for including remote URLs (PHP allow_url_include).
+  - 
 - Causes
   - Unsanitized user input used directly in include, require, or file access APIs.
   - Overly permissive server/PHP settings: e.g., allow_url_include = On, weak open_basedir or world-readable config/log files.
