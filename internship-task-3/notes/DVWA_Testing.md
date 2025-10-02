@@ -255,4 +255,19 @@ It tricks a logged-in user into unknowingly performing actions on a website (lik
   - PoC (vulnerable): While logged in as admin, I hosted a malicious page csrf_exploit.html that auto-submits a GET form to DVWA’s password-change endpoint (/DVWA/vulnerabilities/csrf/) with password_new=hacked123. Visiting the exploit page caused the admin password to be changed to hacked123.and logging in with admin/hacked123 succeeded. This proves the CSRF exploit changed the admin password and resulted in account takeover.
   - Mitigation (token based): I switched DVWA Security to High, which added a per-session hidden token to the CSRF form (e.g. <input type="hidden" name="user_token" value="...">). Re-running the same exploit (which lacks the token) produced a rejected request shown in Network/Response . This demonstrates token-based CSRF protection — the attacker cannot know the per-session token and therefore cannot craft a valid request.Thus, tested by switching DVWA security to High, after which the same exploit is rejected.
 
-STEP 4- 
+STEP 4- File Inclusion Attacks
+
+- File Inclusion vulnerabilities occur when a web application constructs filesystem or URL include paths using untrusted user input and then performs a dynamic include/require (or equivalent).
+- Two main flavors:
+- Local File Inclusion LFI (read sensitive files). 
+  - attacker causes the server to include a file from the local filesystem (e.g., /etc/passwd, application config, logs).
+- Remote File Inclusion RFI (execute malicious code).
+  - attacker causes the server to include and execute a remote resource (e.g., http://attacker/shell.php). RFI requires server-side support for including remote URLs (PHP allow_url_include).
+- Causes
+  - Unsanitized user input used directly in include, require, or file access APIs.
+  - Overly permissive server/PHP settings: e.g., allow_url_include = On, weak open_basedir or world-readable config/log files.
+  - Poor design: dynamically including files by raw name or path supplied by user instead of mapping tokens to known resources.
+- Typical vulnerable code pattern (PHP example)
+    - // Vulnerable: directly includes whatever the user supplies
+    - $page = $_GET['page']; include($page);
+    - This lets an attacker control what include() tries to open/include.
