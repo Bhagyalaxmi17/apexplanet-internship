@@ -92,6 +92,11 @@ Level	Behavior
       - Low → vulnerable
       - High → input is filtered / prepared statements are used
     - You can test attacks, then implement fixes → demonstrates vulnerability → mitigation.
+      
+| Command         | Purpose                                                                                                          | Notes                                                                                                                                                                                                          |
+| --------------- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `nano filename` | Opens an **existing file** (or creates it if it doesn’t exist) in a **text editor** so you can manually edit it. | You type inside the editor, save with `Ctrl+O` and exit with `Ctrl+X`.                                                                                                                                         |
+| `tee filename`  | Creates a **new file** (or overwrites an existing file) and writes content to it from **standard input**.        | Often used with `<<'EOF' ... EOF` (heredoc) to create files **programmatically** without opening an editor. `> /dev/null` is added if you don’t want to display the content in the terminal while creating it. |
 
 STEP 1: SQL Injection  
 
@@ -213,4 +218,41 @@ What is XSS?
     
   - Content Security Policy (CSP):
      - A browser-enforced rule that restricts what resources (scripts, images, CSS) can run on your site. Browser policy delivered via headers that restrict which scripts can execute (e.g., only scripts from the same origin, disallow inline scripts). CSP is defense-in-depth — it mitigates impact even if something slips through. Even if a malicious script is injected, CSP can block execution.
+     - Desc- I implemented a nonce-based Content Security Policy to allow a single trusted inline script while blocking arbitrary injected inline scripts. csp_nonce_demo.php issues a per-response nonce in the Content-Security-Policy header and includes a matching nonce attribute on an inline <script>. The trusted inline script executed successfully (see csp_demo_output.png). The response header containing the nonce is shown in csp_demo_header_code.png. When an injected script without the correct nonce was added dynamically via the console, the browser blocked it and logged a CSP violation (see csp_demo_console_block.png). This proves nonce-based CSP permits only explicitly trusted inline scripts and prevents execution of injected code.
 
+STEP 3- Cross-Site Request Forgery (CSRF)
+
+CSRF (Cross-Site Request Forgery) is a type of web security vulnerability.
+It tricks a logged-in user into unknowingly performing actions on a website (like changing their password, transferring money, deleting an account) without their consent.
+
+- How it Works (Simple Example)
+  - You are logged in to DVWA (or any site) in one tab.
+  - The site uses your session cookie to know you are authenticated.
+  - Attacker sends you a malicious link or form.
+  - Example:
+    - <form action="http://localhost/dvwa/vulnerabilities/csrf/" method="GET">
+        <input type="hidden" name="password_new" value="hacked123">
+        <input type="hidden" name="password_conf" value="hacked123">
+        <input type="hidden" name="Change" value="Change">
+      </form>
+    - <script>document.forms[0].submit();</script>
+ -  If you are still logged in, this request will change your password without you knowing.
+- Why is it Dangerous?
+  - No user interaction needed except clicking/opening attacker’s page.
+  - Works silently because cookies are sent automatically by the browser.
+  - Can lead to account takeover.
+- How to Prevent (Mitigation)
+  - The most common protection is CSRF Token (anti-CSRF token):
+  - Website generates a random unique token for each form request.
+  - The token is stored in the user’s session.
+  - When form is submitted, the token is validated.
+  - If token is missing/wrong → request is blocked.
+- In short:
+- CSRF = Attacker tricks logged-in user to perform actions without consent.
+- Why used in labs like DVWA? → To practice how an attacker can exploit it and how a developer prevents it.
+- Protection = CSRF Tokens (sometimes combined with SameSite cookies).
+- Result
+  - PoC (vulnerable): While logged in as admin, I hosted a malicious page csrf_exploit.html that auto-submits a GET form to DVWA’s password-change endpoint (/DVWA/vulnerabilities/csrf/) with password_new=hacked123. Visiting the exploit page caused the admin password to be changed to hacked123.and logging in with admin/hacked123 succeeded. This proves the CSRF exploit changed the admin password and resulted in account takeover.
+  - Mitigation (token based): I switched DVWA Security to High, which added a per-session hidden token to the CSRF form (e.g. <input type="hidden" name="user_token" value="...">). Re-running the same exploit (which lacks the token) produced a rejected request shown in Network/Response . This demonstrates token-based CSRF protection — the attacker cannot know the per-session token and therefore cannot craft a valid request.Thus, tested by switching DVWA security to High, after which the same exploit is rejected.
+
+STEP 4- 
