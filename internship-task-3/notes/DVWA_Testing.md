@@ -324,154 +324,73 @@ STEP 5-  Burp Suite Advanced
   - Mask or avoid capturing real users’ credentials in shared artifacts.
 
 2 — Burp Intruder — Theory & Attack Types
-What Intruder does
-
-Intruder automates customized HTTP request modifications and sends many variations to the server. It is used for credential guessing, parameter fuzzing, payload enumeration, and discovering logic flaws.
-
-Attack modes (how to choose)
-
-Sniper — single payload position; test many payloads against one parameter (e.g., fuzz only password). Good for focused brute-force or single-parameter fuzzing.
-
-Battering Ram — same payload applied to all marked positions (rare for login).
-
-Pitchfork — multiple payload sets used in parallel (index-aligned); good when you have matched username/password lists.
-
-Cluster Bomb — Cartesian product of multiple payload sets (exhaustive combinations); powerful but resource-intensive.
-
-Components of an Intruder attack
-
-Positions — request parts you mark for substitution (form fields, headers, cookies).
-
-Payload sets — lists of values to inject into each position (wordlists, generated payloads).
-
-Payload processing — transformations, encodings, or insertion of runtime tokens.
-
-Grep/Match rules — text or header patterns used to detect interesting responses (e.g., redirect header, “Welcome” text).
-
-Options — throttle rates, thread counts, timeouts, and success-detection configuration.
-
-Practical payload types
-
-Credential lists (usernames/passwords).
-
-SQLi probes (' OR '1'='1, UNION SELECT ...).
-
-XSS payloads (for testing reflected contexts).
-
-Boundary/format tests (long strings, format strings).
-
-Headers with suspicious content (to test log injection).
-
-Detecting successful results
-
-Header checks: Location redirect to a dashboard URL.
-
-Body checks: presence of dashboard-specific tokens (Welcome, Logout).
-
-Response length: unusually large/small responses compared to baseline.
-
-Set-Cookie: new session or privilege cookie.
-
-Configure Intruder’s Grep - Match to highlight responses that meet these criteria.
-
-CSRF & dynamic tokens — a practical caveat
-
-Many login flows include a CSRF token (user_token) which changes every session. Intruder replaying the same request will fail if the token is stale.
-
-Solutions:
-
-Manually refresh token before runs (small lists).
-
-Use Burp Pro’s Session Handling Rules and macros to fetch a fresh token per request.
-
-For demos, use a logged-in browser cookie jar or small automated flows.
-
-Resource & rate considerations
-
-Intruder sends many requests — be mindful of target stability and local resource limits.
-
-Use throttling and small lists for demonstrations; never run high-volume attacks against production systems.
+- What Intruder does
+  - Intruder automates customized HTTP request modifications and sends many variations to the server. It is used for credential guessing, parameter fuzzing, payload enumeration, and discovering logic flaws.
+- Attack modes (how to choose)
+  - Sniper — single payload position; test many payloads against one parameter (e.g., fuzz only password). Good for focused brute-force or single-parameter fuzzing.
+  - Battering Ram — same payload applied to all marked positions (rare for login).
+  - Pitchfork — multiple payload sets used in parallel (index-aligned); good when you have matched username/password lists.
+  - Cluster Bomb — Cartesian product of multiple payload sets (exhaustive combinations); powerful but resource-intensive.
+- Components of an Intruder attack
+  - Positions — request parts you mark for substitution (form fields, headers, cookies).
+  - Payload sets — lists of values to inject into each position (wordlists, generated payloads).
+  - Payload processing — transformations, encodings, or insertion of runtime tokens.
+  - Grep/Match rules — text or header patterns used to detect interesting responses (e.g., redirect header, “Welcome” text).
+  - Options — throttle rates, thread counts, timeouts, and success-detection configuration.
+- Practical payload types
+  - Credential lists (usernames/passwords).
+  - SQLi probes (' OR '1'='1, UNION SELECT ...).
+  - XSS payloads (for testing reflected contexts).
+  - Boundary/format tests (long strings, format strings).
+  - Headers with suspicious content (to test log injection).
+  - Detecting successful results
+  - Header checks: Location redirect to a dashboard URL.
+  - Body checks: presence of dashboard-specific tokens (Welcome, Logout).
+  - Response length: unusually large/small responses compared to baseline.
+  - Set-Cookie: new session or privilege cookie.
+  - Configure Intruder’s Grep - Match to highlight responses that meet these criteria.
+  - CSRF & dynamic tokens — a practical caveat
+  - Many login flows include a CSRF token (user_token) which changes every session. Intruder replaying the same request will fail if the token is stale.
+- Solutions:
+  - Manually refresh token before runs (small lists).
+  - Use Burp Pro’s Session Handling Rules and macros to fetch a fresh token per request.
+  - For demos, use a logged-in browser cookie jar or small automated flows.
+  - Resource & rate considerations
+  - Intruder sends many requests — be mindful of target stability and local resource limits.
+  - Use throttling and small lists for demonstrations; never run high-volume attacks against production systems.
 
 3 — Practical Attack Scenarios (theory → example)
-Scenario A — Test password strength for known user
+- Scenario A — Test password strength for known user
+  - Mode: Sniper on password field.
+  - Payloads: small password list.
+  - Detection: Location header or body contains “Logout”.
+  - Purpose: demonstrate brute-force risk and justify rate limiting/MFA.
+- Scenario B — Username enumeration
+  - Mode: Sniper or Pitchfork (if testing username/password pairs).
+  - Payloads: common usernames.
+  - Detection: differences in response time or body indicating existence of account.
+- Scenario C — Token manipulation to test CSRF
+  - Intercept login: remove or change hidden token.
+  - Expected: server rejects login / returns error.
+  - Purpose: verify server implements CSRF protections.
+- Scenario D — Header/log injection test
+  - Modify User-Agent to include <?php or suspicious string.
+  - If server logs headers verbatim and LFI exists, this could be later used for log-poisoning → RCE.
 
-Mode: Sniper on password field.
-
-Payloads: small password list.
-
-Detection: Location header or body contains “Logout”.
-
-Purpose: demonstrate brute-force risk and justify rate limiting/MFA.
-
-Scenario B — Username enumeration
-
-Mode: Sniper or Pitchfork (if testing username/password pairs).
-
-Payloads: common usernames.
-
-Detection: differences in response time or body indicating existence of account.
-
-Scenario C — Token manipulation to test CSRF
-
-Intercept login: remove or change hidden token.
-
-Expected: server rejects login / returns error.
-
-Purpose: verify server implements CSRF protections.
-
-Scenario D — Header/log injection test
-
-Modify User-Agent to include <?php or suspicious string.
-
-If server logs headers verbatim and LFI exists, this could be later used for log-poisoning → RCE.
-
-4 — Defenses & Mitigations (what to recommend in your report)
-For login/authentication
-
-Enforce strong password policy, account lockout, rate limits, and progressive delays.
-
-Implement MFA.
-
-Use secure session handling (HttpOnly, Secure, SameSite; regenerate session ID on login).
-
-Do not leak detailed error messages on authentication failure (avoid “user does not exist” vs “wrong password”).
-
-For CSRF & token handling
-
-Use per-session/per-form CSRF tokens bound to session and validated server-side.
-
-Use SameSite cookies and include CSRF checks on all state-changing endpoints.
-
-For log-injection and input handling
-
-Sanitize and encode headers and inputs written to logs; avoid storing raw user-controlled content if it may later be executed.
-
-Harden logging directories and file permissions to reduce risk of inclusion.
-
-For intrusion detection
-
-Monitor for repeated failed login attempts, unusual headers, or high request rates.
-
-Use WAF rules to block common fuzzing signatures and high-frequency attacks.
-
-5 — Evidence & Reporting (what to capture)
-
-For each exercise capture:
-
-Proxy intercept screenshot (request/response with modifications; mask credentials).
-
-Intruder Positions screenshot (which fields were fuzzed).
-
-Intruder results screenshot showing the highlighted (candidate) responses — include grep rules used.
-
-Session-handling rule/macro if used (Burp Pro).
-
-Notes: payload lists used, number of requests, throttle settings, and any server-side errors observed.
-
-6 — Ethical & Operational Notes
-
-Only run these tests against systems you control or have explicit permission to test.
-
-Keep credential & session data private. For public reports, redact session IDs and any sensitive data.
-
-Document any server changes made for the lab (permission changes, created files) and revert them on cleanup.
+4 — Defenses & Mitigations 
+- For login/authentication
+  - Enforce strong password policy, account lockout, rate limits, and progressive delays.
+  - Implement MFA.
+  - Use secure session handling (HttpOnly, Secure, SameSite; regenerate session ID on login).
+  - Do not leak detailed error messages on authentication failure (avoid “user does not exist” vs “wrong password”).
+- For CSRF & token handling
+  - Use per-session/per-form CSRF tokens bound to session and validated server-side.
+  - Use SameSite cookies and include CSRF checks on all state-changing endpoints.
+  - For log-injection and input handling
+  - Sanitize and encode headers and inputs written to logs; avoid storing raw user-controlled content if it may later be executed.
+  - Harden logging directories and file permissions to reduce risk of inclusion.
+- For intrusion detection
+  - Monitor for repeated failed login attempts, unusual headers, or high request rates.
+  - Use WAF rules to block common fuzzing signatures and high-frequency attacks.
+  - Only run these tests against systems you control or have explicit permission to test.
+  - Keep credential & session data private. For public reports, redact session IDs and any sensitive data.
