@@ -1,9 +1,9 @@
 OWASP stands for Open Web Application Security Project.
-**“OWASP is a global nonprofit organization focused on improving the security of software. It provides free resources, tools, and best practices for developers and security professionals to identify, prevent, and fix vulnerabilities in web applications.
 
-One of its most well-known contributions is the ‘OWASP Top 10,’ which is a list of the 10 most critical web application security risks, like SQL Injection, Cross-Site Scripting (XSS), and Broken Authentication. It serves as a guideline to help developers and security teams secure applications against common threats.”**
+- OWASP is a global nonprofit organization focused on improving the security of software. It provides free resources, tools, and best practices for developers and security professionals to identify, prevent, and fix vulnerabilities in web applications.
+- One of its most well-known contributions is the ‘OWASP Top 10,’ which is a list of the 10 most critical web application security risks, like SQL Injection, Cross-Site Scripting (XSS), and Broken Authentication. It serves as a guideline to help developers and security teams secure applications against common threats.”**
 
-DVWA (Damn Vulnerable Web Application)
+- DVWA (Damn Vulnerable Web Application)
 
 1. What is DVWA?
 
@@ -284,6 +284,18 @@ STEP 4- File Inclusion Attacks
     - // Vulnerable: directly includes whatever the user supplies
     - $page = $_GET['page']; include($page);
     - This lets an attacker control what include() tries to open/include.
+- Execution Steps
+   - A. LFI — file reads
+     - /etc/passwd — classic proof (world-readable), shows web user/home directories.
+     - /etc/hosts & /etc/hostname — low-risk proofs that show host identity.
+     - php://filter/convert.base64-encode/resource=/path/to/file.php — retrieve PHP source without executing it (base64 output decoded locally).
+     - What this proves: The application can read arbitrary files via the page parameter → Information disclosure.
+   - B. Include execution (code exec proof)
+     - Created /var/www/html/test_include.php containing echo + environment info (PHP version, get_current_user(), getmyuid(), getcwd()).
+     - Included via DVWA:  http://127.0.0.1/DVWA/vulnerabilities/fi/?page=/var/www/html/test_include.php
+   - Output showed Current user: www-data and environment details.
+     - What this proves: The app executes included PHP code as the webserver user — a direct path to code execution if an attacker can place PHP code into an includable location.
+
 
 STEP 5-  Burp Suite Advanced
 
