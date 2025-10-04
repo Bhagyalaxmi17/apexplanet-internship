@@ -394,3 +394,85 @@ STEP 5-  Burp Suite Advanced
   - Use WAF rules to block common fuzzing signatures and high-frequency attacks.
   - Only run these tests against systems you control or have explicit permission to test.
   - Keep credential & session data private. For public reports, redact session IDs and any sensitive data.
+
+5- Implementation 
+- Intercepting & modifying HTTP requests
+  - Intercepting means capturing an HTTP(S) request between the client and server, inspecting the raw request, changing fields (headers, cookies, POST body) and forwarding the modified request to observe server behavior. This is used in web security testing to validate authentication, session management, input validation, and to simulate tampering attacks. Interception is typically performed via a proxy (Burp Suite Proxy) which the client routes traffic through; Burp pauses requests (Intercept) so the tester can edit them before forwarding.
+- Important HTTP parts used here
+   - Request line & path: POST /DVWA/login.php HTTP/1.1 — target resource and method.
+   - Headers: Host, Cookie, Content-Type — control routing, session, and content interpretation.
+   - Body (form data): username=...&password=...&user_token=... — parameters that the server uses to authenticate.
+   - CSRF token (user_token): a hidden field used to prevent Cross-Site Request Forgery; must be included/valid in the POST.
+   - Session cookie (PHPSESSID): identifies the user session; necessary to link the login POST to the correct session state.
+- Intruder
+  - Burp Intruder automates parameter fuzzing and brute-force style attacks: you mark positions (e.g., password), supply a payload list, and Intruder substitutes payloads at positions and records responses (status, length, body). Differences in response behavior reveal interesting inputs (e.g., successful login, error messages).
+- How to detect “success” during fuzzing
+Look for differences in HTTP status (302 redirect on login success vs 200/400 on failure), response length changes, presence of keywords in body (“Welcome”, username), or headers like Location:.
+- Task: Intercept and modify login requests; Perform fuzzing with Intruder tool.
+- Method: Fetched DVWA login page to obtain CSRF token and session cookie. Constructed a raw POST request inside Burp (target: POST /DVWA/login.php) and marked the password parameter for injection. Used Burp Intruder with a small payload list (/tmp/mini_wl.txt) to fuzz the password parameter and observed differing responses (Status 302 & Length 533 vs Status 400 & Length 483). Used Burp Repeater to manually edit and resend login requests to demonstrate intercept-and-modify. Screenshots attached: Intruder results table, Intruder response preview, Repeater request/response.
+
+STEP 6-  Web Security Headers
+
+- Web security headers are HTTP response headers that tell the browser how to behave when interacting with a website.They protect websites from common attacks such as:
+- Cross-Site Scripting (XSS) , Clickjacking , MIME type sniffing , Information leaks, Unauthorized access to device APIs
+- Using proper security headers is a simple yet powerful way to improve a site’s security posture.
+- Task:
+ - Analyze a test site using https://securityheaders.com
+ - Identify missing headers
+ - Add proper HTTP headers in Apache configuration
+ - Verify headers are correctly applied
+ - Test site used: Local DVWA (http://127.0.0.1/DVWA/)
+- Commands and Steps
+  - Step 1 – Enable Apache headers module
+      - sudo a2enmod headers (a2enmod headers → enables the module.)
+      - sudo systemctl reload apache2 (reload apache2 → applies changes without restarting the server)
+  - Purpose: Apache requires mod_headers to add custom headers.
+  - Step 2 – Backup Apache vhost
+      - sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf.bak
+  - Purpose: Always backup configuration files before editing.If anything goes wrong, you can restore the backup.
+  - Step 3 – Add security headers in Apache vhost
+    - Edit the default vhost: sudo nano /etc/apache2/sites-available/000-default.conf
+    - Inside <VirtualHost *:80>, add:
+       - # === Security Headers (for DVWA testing) ===
+       - Header always set X-Content-Type-Options "nosniff"
+       - Header always set X-Frame-Options "SAMEORIGIN"
+       - Header always set Referrer-Policy "strict-origin-when-cross-origin"
+       - Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+       - # Content-Security-Policy in Report-Only mode to avoid breaking DVWA
+       - Header always set Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'self';"
+       - # HSTS only if HTTPS is enabled
+       - #Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+       - # === End security headers ===
+  - Theory Behind Each Header
+    - 1. X-Content-Type-Options: nosniff
+      - Prevents the browser from interpreting files as a different MIME type than declared.
+      - Protects against attacks where a malicious file is served with wrong type.
+    - 2. X-Frame-Options: SAMEORIGIN
+      - Prevents your site from being embedded in an iframe on another domain.
+      - Mitigates clickjacking, where attackers trick users into clicking hidden buttons.
+    - 3. Referrer-Policy: strict-origin-when-cross-origin
+      - Controls what information is sent in the Referer header.
+      - Limits sensitive data leakage to external sites.
+    - 4. Permissions-Policy
+      - Restricts access to browser APIs like camera, microphone, geolocation.
+      - Minimizes attack surface for malicious scripts.
+    - 5. Content-Security-Policy-Report-Only
+      - Restricts where scripts, styles, images can load from (self, inline, eval).
+      - Protects against XSS, malicious scripts, data injection.
+      - Report-Only mode logs violations without blocking, good for testing.
+    - 6. Strict-Transport-Security
+      - Forces HTTPS connections for a period (max-age) and all subdomains.
+      - Protects against downgrade attacks and ensures encrypted traffic.
+  - Step 4- Test Apache configuration
+    - sudo apachectl configtest (configtest → checks syntax.)
+    - Expected output: Syntax OK (you might see a warning about ServerName; it’s safe).
+    - sudo systemctl reload apache2 (reload → applies the new headers.)
+  - Step 5- Verify headers.
+     - Command used:
+     - curl -I http://127.0.0.1/DVWA/ | grep -i 'X-Content-Type-Options\|X-Frame-Options\|Referrer-Policy\|Permissions-Policy\|Content-Security-Policy\|Strict-Transport-Security'
+     - Explanation:curl -I → fetch only headers. grep -i → filter headers we care about.
+     - Output should show all headers we added:
+     - Strict-Transport-Security will appear only if DVWA uses HTTPS.
+     - CSP is in Report-Only mode for DVWA so the site doesn’t break.
+     - HSTS works only over HTTPS, so leave commented on HTTP.
+  - Step 6- Result - All required headers are applied to DVWA. Verified locally via curl.
