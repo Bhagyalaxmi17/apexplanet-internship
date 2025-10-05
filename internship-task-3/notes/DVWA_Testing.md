@@ -28,33 +28,7 @@ OWASP stands for Open Web Application Security Project.
       - Weak passwords / authentication flaws
     - Mitigation testing: You can see how security mechanisms (like prepared statements, input validation, and headers) stop attacks.
 
-3. DVWA Structure
-
-DVWA’s file structure is very organized. Here’s a simplified overview:
-
-/var/www/html/DVWA/
-│
-├── config/                 # Configuration files (DB credentials, etc.)
-│   ├── config.inc.php      # Active configuration
-│   └── config.inc.php.dist # Template file
-│
-├── hackable/               # Pages containing vulnerabilities
-│   ├── sqli/               # SQL Injection examples
-│   ├── xss/                # Cross-site scripting
-│   ├── csrf/               # CSRF examples
-│   └── file_inclusion/     # LFI / RFI examples
-│
-├── setup.php               # Database setup / initialization script
-├── index.php               # DVWA homepage
-├── login.php               # Login page
-└── README.md               # Instructions
-
-Why important:
-    - Each vulnerability is isolated in a separate folder → safe and focused learning.
-    - config/ connects DVWA to MariaDB. Without this, DVWA cannot run.      
-    - setup.php ensures the database tables are created properly.
-
-4. Security Levels in DVWA
+3. Security Levels in DVWA
 
 DVWA allows you to change security settings:
 
@@ -64,7 +38,7 @@ Level	Behavior
     - High Proper security → attacks harder or blocked
     - Impossible Security cannot be bypassed → shows how a fully secure system behaves
 
-5. Example Vulnerabilities in DVWA
+4. Example Vulnerabilities in DVWA
 
     - SQL Injection (SQLi)
        - User input is directly added into SQL queries.
@@ -81,7 +55,7 @@ Level	Behavior
        - LFI/RFI allows reading or executing server files.
        - Commonly used to steal configs or run malicious code.
 
-6. How DVWA Works
+5. How DVWA Works
       
     - User accesses a page (e.g., SQLi page).
     - The page takes user input (like id) and builds an SQL query.
