@@ -1,3 +1,9 @@
+Notes Made By Bhagyalaxmi Panigrahi
+
+ScreenSots Are All Provided for each steps with clear explanations
+
+Notes- 
+
 Step 2 —  Exploitation with Metasploit
 
 Exploitation, Reverse Shell, Post-Exploitation
