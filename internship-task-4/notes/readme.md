@@ -175,6 +175,20 @@ Use host-based intrusion detection (OSSEC, auditd rules) to detect suspicious ac
 
 Use centralized logging and alerting for repeated failed auth attempts.
 
+Eg-
+
+from your john --show output)
+
+You found these working username:password pairs:
+
+sys : batman
+
+klog : 123456789
+
+service : service
+
+This means offline cracking succeeded for 3 of 7 hashes.
+
 5. Reporting — what to include (nice checklist)
 
 Test scope (authorized Metasploitable2 lab VM only), date/time, attacker IP (Kali), and tools/versions.
