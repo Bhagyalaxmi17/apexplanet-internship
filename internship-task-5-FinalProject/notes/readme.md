@@ -252,6 +252,9 @@ Visual graphs showed spikes in failed login attempts — indicating a brute-forc
  Final Outcome
 
 Successfully set up the ELK-based Mini SIEM
+
 Logs collected and visualized in real-time
+
 SSH attack detected through Filebeat and Kibana
+
 Dashboard created showing attack metrics
